@@ -33,18 +33,15 @@ const getContactById = async (contactId) => {
 const removeContact = async (contactId) => {
   try {
     const contacts = await readContactsFromFile();
-    const index = contacts.find((contact) => contact.id === contactId);
-    contacts.splice(index, 1);
-    fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2), (err) => {
-      if (err) {
-        console.error("Error writing contacts file:", err);
-        return;
-      }
-
-      console.log(`Kontakt o ID ${contactId} został usunięty.`);
-    });
+    const users = contacts.filter((contact) => contact.id !== contactId);
+    if (users) {
+      fs.writeFile(contactsPath, JSON.stringify(users, null, 2));
+    } else {
+      console.log("nope nie ma opcji");
+      return;
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error, "catch error");
   }
 };
 
@@ -54,6 +51,7 @@ const addContact = async (body) => {
     const contacts = await readContactsFromFile();
     const newContact = { id: generateID, ...body };
     contacts.push(newContact);
+
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     console.log(`Nowy kontakt został dodany: ${JSON.stringify(newContact)}`);
   } catch (error) {
@@ -61,7 +59,20 @@ const addContact = async (body) => {
   }
 };
 
-const updateContact = async (contactId, body) => {};
+const updateContact = async (contactId, body) => {
+  console.log(body);
+  try {
+    const contacts = await readContactsFromFile();
+    console.log("test");
+    const replacedContacts = contacts.map((contact) => {
+      if (contact.id === contactId) {
+        return body;
+      } else {
+        return replacedContacts;
+      }
+    });
+  } catch (error) {}
+};
 
 module.exports = {
   listContacts,
