@@ -1,5 +1,10 @@
 const express = require("express");
-const { listContacts, getContactById } = require("../../models/contacts");
+
+const {
+  listContacts,
+  getContactById,
+  removeContact,
+} = require("../../models/contacts");
 
 const router = express.Router();
 
@@ -24,12 +29,19 @@ router.get("/:contactId", async (req, res, next) => {
     console.log(error);
   }
 });
-
-router.post("/", async (req, res, next) => {
+router.delete("/:contactId", async (req, res, next) => {
+  try {
+    const deleteContact = await removeContact(req.params.contactId);
+    if (!deleteContact) {
+      return res.status(404).json({ message: "Not found" });
+    } else {
+      return res.status(200).send({ deleteContact });
+    }
+  } catch (error) {}
   res.json({ message: "template message" });
 });
 
-router.delete("/:contactId", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
