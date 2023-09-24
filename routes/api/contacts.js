@@ -46,7 +46,6 @@ router.delete("/:contactId", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const postContact = await addContact(req.body);
-    console.log(postContact, "POSTCONTACT");
     return res.status(200).send({ postContact });
   } catch (error) {}
   return res.status(404).json({ message: "Not found" });
@@ -54,11 +53,17 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:contactId", async (req, res, next) => {
   try {
-    const forUpdate = (req.params.contactId, req.params.body);
-    return res.status(200).send({ forUpdate });
-  } catch (error) {
-    res.json({ message: "template message" });
-  }
+    if (updateContact === false) {
+      return res.status(404).json({ message: "testst" });
+    } else {
+      const forUpdate = await updateContact(req.params.contactId, req.body);
+      if (!forUpdate) {
+        return res.status(404).json({ message: "Not found" });
+      } else {
+        return res.status(200).send({ forUpdate });
+      }
+    }
+  } catch (error) {}
 });
 
 module.exports = router;

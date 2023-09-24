@@ -60,17 +60,21 @@ const addContact = async (body) => {
 };
 
 const updateContact = async (contactId, body) => {
-  console.log(body);
   try {
     const contacts = await readContactsFromFile();
-    console.log("test");
+    if (!body.name || !body.email || !body.phone) {
+      console.log("nie ma ");
+      return false;
+    }
     const replacedContacts = contacts.map((contact) => {
+      const newData = { id: contactId, ...body };
+
       if (contact.id === contactId) {
-        return body;
-      } else {
-        return replacedContacts;
+        return newData;
       }
+      return contact;
     });
+    await fs.writeFile(contactsPath, JSON.stringify(replacedContacts, null, 2));
   } catch (error) {}
 };
 
