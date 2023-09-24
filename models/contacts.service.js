@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const contactsPath = path.resolve(__dirname, "./contacts.json");
 const shortid = require("shortid");
+
 const readContactsFromFile = async () => {
   try {
     const data = await fs.readFile(contactsPath);
@@ -62,10 +63,7 @@ const addContact = async (body) => {
 const updateContact = async (contactId, body) => {
   try {
     const contacts = await readContactsFromFile();
-    if (!body.name || !body.email || !body.phone) {
-      console.log("nie ma ");
-      return false;
-    }
+
     const replacedContacts = contacts.map((contact) => {
       const newData = { id: contactId, ...body };
 
