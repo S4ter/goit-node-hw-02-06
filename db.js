@@ -3,7 +3,9 @@ const { mongoConnectionString } = require("./config");
 
 const connect = async () => {
   try {
-    await mongoose.connect(mongoConnectionString);
+    await mongoose.connect(mongoConnectionString, {
+      dbName: "db-contacts",
+    });
   } catch (e) {
     console.error(e);
     throw new Error("Failed to connect with database");

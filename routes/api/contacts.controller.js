@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const users = await listContacts();
-    return res.status(200).send({ users });
+    const contacts = await listContacts();
+    return res.status(200).send({ contacts });
   } catch (error) {
     return res.status(500).send({ error });
   }
