@@ -6,6 +6,7 @@ const {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 } = require("../../models/contacts.service");
 
 const router = express.Router();
@@ -47,50 +48,42 @@ router.delete("/:contactId", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (
-    name === "" ||
-    !name ||
-    email === "" ||
-    !email ||
-    phone === "" ||
-    !phone
-  ) {
-    return res.status(400).json({ message: "missing required fields" });
-  } else {
-    try {
-      const postContact = await addContact(req.body);
+  try {
+    const postContact = await addContact(req.body);
 
-      return res.status(200).send({ postContact });
-    } catch (error) {
-      return res.status(404).json({ message: "Not found" });
-    }
+    return res.status(200).send({ postContact });
+  } catch (error) {
+    return res.status(404).json({ message: "Not found" });
   }
 });
 
 router.put("/:contactId", async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (
-    name === "" ||
-    !name ||
-    email === "" ||
-    !email ||
-    phone === "" ||
-    !phone
-  ) {
-    return res.status(400).json({ message: "missing required fields" });
-  } else {
-    try {
-      const forUpdate = await updateContact(req.params.contactId, req.body);
+  try {
+    const forUpdate = await updateContact(req.params.contactId, req.body);
 
-      if (!forUpdate) {
-        return res.status(404).json({ message: "Not found" });
-      } else {
-        return res.status(200).send({ forUpdate });
-      }
-    } catch (error) {
-      console.log(error);
+    if (!forUpdate) {
+      return res.status(404).json({ message: "Not found" });
+    } else {
+      return res.status(200).send({ forUpdate });
     }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.patch("/:contactId", async (req, res, next) => {
+  try {
+    const changeFavorite = await updateStatusContact(
+      req.params.contactId,
+      req.body
+    );
+
+    if (!changeFavorite) {
+      return res.status(404).json({ message: "Not found" });
+    } else {
+      return res.status(200).send({ changeFavorite });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
