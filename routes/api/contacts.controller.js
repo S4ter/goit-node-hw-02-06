@@ -7,7 +7,7 @@ const {
   addContact,
   updateContact,
   updateStatusContact,
-} = require("../../models/contacts.service");
+} = require("../../models/contacts/contacts.service");
 
 const router = express.Router();
 
