@@ -1,4 +1,4 @@
-const User = require("./users.model");
+const { User } = require("./users.model");
 
 class DuplicatedKeyError extends Error {
   constructor(keyName, value) {
@@ -19,9 +19,13 @@ const createUser = async (userData) => {
     console.log(error);
 
     if (error.code === 11000) {
-      const [[key, value]] = Object.entries(e.keyValue);
+      const [[key, value]] = Object.entries(error.keyValue);
       throw new DuplicatedKeyError(key, value);
     }
     throw new UnknownDatabase();
   }
+};
+
+module.exports = {
+  createUser,
 };

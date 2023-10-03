@@ -9,6 +9,16 @@ const listUsers = async () => {
   }
 };
 
+const currentUser = async (token) => {
+  try {
+    return await User.find(token);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 module.exports = {
   listUsers,
+  currentUser,
 };
