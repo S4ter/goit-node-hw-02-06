@@ -25,7 +25,27 @@ const createUser = async (userData) => {
     throw new UnknownDatabase();
   }
 };
+const getUser = async (email) => {
+  try {
+    return await User.findOne({ email });
+  } catch (error) {
+    console.log(error);
+    throw new UnknownDatabase();
+  }
+};
+const updateUser = async (email, userData) => {
+  try {
+    return await User.findOneAndUpdate({ email }, userData);
+  } catch (error) {
+    console.log(error);
+    throw new UnknownDatabase();
+  }
+};
 
 module.exports = {
   createUser,
+  getUser,
+  updateUser,
+  DuplicatedKeyError,
+  UnknownDatabase,
 };

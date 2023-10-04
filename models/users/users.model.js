@@ -28,6 +28,9 @@ userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+userSchema.methods.validatePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 const User = model("users", userSchema);
 
