@@ -41,11 +41,29 @@ const loginHandler = async (req, res, next) => {
     return next(error);
   }
 };
-const logoutHandler = (req, res, next) => {
-  return res.send({ message: "logout working" });
+const logoutHandler = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+
+    await userDao.updateUser(email, { token: null });
+
+    return res.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
+};
+const currentHandler = async (req, res, next) => {
+  try {
+    const { email, subscription } = req.user;
+
+    await res.status(200).send({ user: { email, subscription } });
+  } catch (error) {
+    return next(error);
+  }
 };
 module.exports = {
   signupHandler,
   loginHandler,
   logoutHandler,
+  currentHandler,
 };
