@@ -14,10 +14,10 @@ const router = express.Router();
 router.get("/", authMiddleware, async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const { page = 1, limit = 10 } = req.query;
+    const { page, limit, favorite } = req.query;
     const skip = (page - 1) * limit;
 
-    const contacts = await listContacts(userId, limit, skip);
+    const contacts = await listContacts(userId, limit, skip, favorite);
     return res.status(200).send({ contacts });
   } catch (error) {
     return res.status(500).send({ error });
