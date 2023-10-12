@@ -1,8 +1,15 @@
 const { Contact } = require("./contacts.model");
 
-const listContacts = async () => {
+const listContacts = async (ownerId, limit, skip, favorite) => {
   try {
-    return await Contact.find();
+    let findData = {};
+    if (favorite === "true") {
+      findData = { owner: ownerId, favorite: "true" };
+    } else {
+      findData = { owner: ownerId };
+    }
+
+    return await Contact.find(findData).limit(limit).skip(skip);
   } catch (err) {
     console.log(err);
     return [];

@@ -1,5 +1,5 @@
 const express = require("express");
-
+const { authMiddleware } = require("../../models/auth/auth.middleware");
 const {
   listContacts,
   getContactById,
@@ -7,13 +7,17 @@ const {
   addContact,
   updateContact,
   updateStatusContact,
-} = require("../../models/contacts.service");
+} = require("../../models/contacts/contacts.service");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/", authMiddleware, async (req, res, next) => {
   try {
-    const contacts = await listContacts();
+    const userId = req.user._id;
+    const { page, limit, favorite } = req.query;
+    const skip = (page - 1) * limit;
+
+    const contacts = await listContacts(userId, limit, skip, favorite);
     return res.status(200).send({ contacts });
   } catch (error) {
     return res.status(500).send({ error });
@@ -47,9 +51,20 @@ router.delete("/:contactId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", authMiddleware, async (req, res, next) => {
+  console.log(req.user._id);
   try {
-    const postContact = await addContact(req.body);
+    const { name, email, phone, favorite } = req.body;
+
+    const userId = req.user._id;
+    const contactData = {
+      name,
+      email,
+      phone,
+      favorite,
+      owner: userId,
+    };
+    const postContact = await addContact(contactData);
 
     return res.status(200).send({ postContact });
   } catch (error) {
