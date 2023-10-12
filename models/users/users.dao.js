@@ -1,3 +1,4 @@
+const gravatar = require("gravatar");
 const { User } = require("./users.model");
 
 class DuplicatedKeyError extends Error {
@@ -14,7 +15,17 @@ class UnknownDatabase extends Error {
 
 const createUser = async (userData) => {
   try {
-    return await User.create(userData);
+    const avatarURL = gravatar.url(
+      `${userData.email}`,
+      { default: "identicon" },
+      true
+    );
+    const userBody = {
+      email: userData.email,
+      password: userData.password,
+      avatarURL: avatarURL,
+    };
+    return await User.create(userBody);
   } catch (error) {
     console.log(error);
 
