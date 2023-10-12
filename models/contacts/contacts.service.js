@@ -3,7 +3,7 @@ const { Contact } = require("./contacts.model");
 const listContacts = async (ownerId, limit, skip, favorite) => {
   try {
     let findData = {};
-    if (favorite === "true") {
+    if (favorite) {
       findData = { owner: ownerId, favorite: "true" };
     } else {
       findData = { owner: ownerId };
