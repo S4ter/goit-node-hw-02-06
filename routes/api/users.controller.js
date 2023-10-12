@@ -1,10 +1,6 @@
 const userDao = require("../../models/users/users.dao");
 const authService = require("../../models/auth/auth.service");
-const multer = require("multer");
-const path = require("path");
-const mimetypes = require("mime-types");
-const Jimp = require("jimp");
-const { User } = require("../../models/users/users.model");
+
 const signupHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -65,45 +61,9 @@ const currentHandler = async (req, res, next) => {
     return next(error);
   }
 };
-const avatarHandler = async (req, res, next) => {
-  const upload = multer({ dest: "tmp/" }).single("avatar");
-  upload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).send("Błąd przesyłania pliku");
-    }
-
-    try {
-      const { email } = req.user;
-      const filename = `${email}_${Date.now()}.${mimetypes.extension(
-        req.file.mimetype
-      )}`;
-
-      const tmpPath = req.file.path;
-      const avatarImage = await Jimp.read(tmpPath);
-      const sendAvatarToPublic = path.join(
-        __dirname,
-        "../../public/avatars",
-        filename
-      );
-      await avatarImage.resize(250, 250).writeAsync(sendAvatarToPublic);
-
-      const updateWithAvatar = await User.findOneAndUpdate(
-        { email },
-        { avatarURL: `http://localhost:3000/avatars/${filename}` },
-        { new: true }
-      );
-
-      console.log("avatarHandler working");
-      return res.status(201).send({ user: updateWithAvatar });
-    } catch (error) {
-      return next(error);
-    }
-  });
-};
 module.exports = {
   signupHandler,
   loginHandler,
   logoutHandler,
   currentHandler,
-  avatarHandler,
 };
