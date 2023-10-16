@@ -19,7 +19,9 @@
     "mongodb": "^6.1.0",
     "mongoose": "^7.5.3",
     "morgan": "1.10.0",
-    "shortid": "^2.2.16"
+    "nodemailer": "^6.9.6",
+    "shortid": "^2.2.16",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "eslint": "7.19.0",
