@@ -1,5 +1,5 @@
 const { User } = require("./users.model");
-
+const { v4: uuid } = require("uuid");
 class DuplicatedKeyError extends Error {
   constructor(keyName, value) {
     super(`${keyName} has to be unique. ${value} is already taken.`);
@@ -14,7 +14,11 @@ class UnknownDatabase extends Error {
 
 const createUser = async (userData) => {
   try {
-    return await User.create(userData);
+    return await User.create({
+      ...userData,
+      verify: false,
+      verificationToken: uuid(),
+    });
   } catch (error) {
     console.log(error);
 
@@ -25,9 +29,9 @@ const createUser = async (userData) => {
     throw new UnknownDatabase();
   }
 };
-const getUser = async (email) => {
+const getUser = async (filter) => {
   try {
-    return await User.findOne({ email });
+    return await User.findOne(filter);
   } catch (error) {
     console.log(error);
     throw new UnknownDatabase();
